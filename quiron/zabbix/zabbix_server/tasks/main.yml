@@ -1,0 +1,241 @@
+---
+# tasks file for zabbix_server
+- name: Uninstall a list of packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+    state: absent
+  vars:
+    packages:
+    - apache2
+    - postgresql
+    - libapache2-mod-php7.3 
+    - php7.3 
+    - php7.3-bcmath 
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-fpm
+    - php7.3-gd 
+    - php7.3-json
+    - php7.3-ldap
+    - php7.3-mbstring
+    - php7.3-opcache
+    - php7.3-pgsql
+    - php7.3-readline
+    - php7.3-xml
+    - php7.3-curl
+    - php-ssh2
+    - libssh2-1
+    - libssh2-1-dev
+    - fping
+
+- name: Recursively remove directory zabbix-5.0.5
+  file:
+    path: "{{ source_path }}"
+    state: absent
+
+- name: Recursively remove file /etc/systemd/system/zabbix-server.service
+  file:
+    path: /etc/systemd/system/zabbix-server.service
+    state: absent
+
+- name: Recursively remove file /etc/systemd/system/zabbix-agent.service
+  file:
+    path: /etc/systemd/system/zabbix-agent.service
+    state: absent
+
+- name: Recursively remove file log/zabbix
+  file:
+    path: /var/log/zabbix
+    state: absent
+
+- name: Recursively remove file run/zabbix
+  file:
+    path: /var/run/zabbix
+    state: absent
+
+- name: Recursively remove directory zabbix-5.0.5
+  file:
+    path: "{{ source_path }}"
+    state: absent
+
+- name: Install a list of packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - apache2
+    - postgresql
+    - libapache2-mod-php7.3 
+    - php7.3 
+    - php7.3-bcmath 
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-fpm
+    - php7.3-gd 
+    - php7.3-json
+    - php7.3-ldap
+    - php7.3-mbstring
+    - php7.3-opcache
+    - php7.3-pgsql
+    - php7.3-readline
+    - php7.3-xml
+    - php7.3-curl
+    - php-ssh2
+    - libssh2-1
+    - libssh2-1-dev
+    - fping
+
+- name: Copy file zabbix-5.0.5.tar.gz
+  copy:
+    src: files/zabbix-5.0.5.tar.gz
+    dest: "{{ dest_tar_source_file }}"
+
+- unarchive:
+    src: files/zabbix-5.0.5.tar.gz
+    dest: "{{ dest_untar_source_file }}"
+
+- name: Ensure group "zabbix" exists
+  group:
+    name: "{{ zabbix_group }}"
+    state: present
+
+- name: Add the user 'zabbix' with a specific uid and a primary group of 'zabbix'
+  user:
+    name: "{{ zabbix_user }}"
+    comment: "{{ zabbix_user }}"
+    group: "{{ zabbix_group }}"
+
+- name: run custom script database zabbix_11
+  command: "psql -c \"SELECT * FROM pg_stat_activity WHERE datname = 'zabbix';\""
+  become_user: postgres
+
+- name: run custom script database zabbix_111
+  command: "psql -c \"SELECT pg_terminate_backend (pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'zabbix';\""
+  become_user: postgres
+
+- name: run custom script drop database zabbix
+  command: "psql -c \"DROP DATABASE IF EXISTS zabbix;\""
+  become_user: postgres
+
+- name: run custom script drop user zabbix
+  command: "psql -c \"DROP USER IF EXISTS zabbix;\""
+  become_user: postgres
+
+- name: run custom script create user zabbix
+  command: "{{ cmd_create_psql_user }}"
+  become_user: postgres
+
+- name: run custom script create user zabbix
+  command: "createdb -O zabbix -E Unicode -T template0 zabbix"
+  become_user: postgres
+
+- name: run custom sql script name schema
+  command: "psql -d zabbix -f {{ source_path }}{{ cmd_sql_schema }}"
+  become_user: zabbix
+
+- name: run custom sql script name images
+  command: "psql -d zabbix -f {{ source_path }}{{ cmd_sql_images }}"
+  become_user: zabbix
+
+- name: run custom sql script name data
+  command: "psql -d zabbix -f {{ source_path }}{{ cmd_sql_data }}"
+  become_user: zabbix
+
+- name: Execute command ./configure with parameters
+  shell:
+     cmd: ./configure --enable-server --enable-agent --with-postgresql --with-net-snmp --with-ssh2 --with-gnutls
+     chdir: "{{ source_path }}"
+
+- name: Execute make install
+  shell:
+     cmd: make install
+     chdir: "{{ source_path }}"
+
+- name: copy ui directory
+  command: "rsync -avvuzr {{ source_path }}/ui {{ web_path }}"
+  become_user: root
+
+- name: rename directory ui to zabbix
+  command: "mv {{ web_path }}/ui {{ web_path }}/zabbix"
+  become_user: root
+
+- name: Copy file zabbix-5.0.5.tar.gz
+  copy:
+    src: files/zabbix.conf.php
+    dest: "{{ web_path }}/zabbix/conf/zabbix.conf.php"
+
+- name: change perm zabbix directory
+  file:
+    path: "{{ web_path }}/zabbix"
+    mode: '0755'
+
+- name: change parameters values in php.ini
+  command: "{{ php_init_value_parameters }}"
+  become_user: root
+
+- name: change parameters values in php.ini
+  command: "{{ php_init_value_parameters_timezone }}"
+  become_user: root
+
+- name: Create a directory log/zabbix if it does not exist
+  file:
+    path: /var/log/zabbix
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: '0755'
+ 
+- name: Create a directory run/zabbix if it does not exist
+  file:
+    path: /var/run/zabbix
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: '0755'
+
+- name: Start service zabbix-server on debian, if running
+  systemd:
+    name: apache2
+    state: restarted
+
+- name: Copy file zabbix-5.0.5.tar.gz
+  copy:
+    src: files/zabbix-server.service
+    dest: /etc/systemd/system/zabbix-server.service
+
+- name: Copy zabbix_server.conf
+  copy:
+    src: files/zabbix_server.conf
+    dest: /usr/local/etc/zabbix_server.conf
+
+- name: Copy zabbix_agentd.conf
+  copy:
+     src: files/zabbix_agentd.conf
+     dest: /usr/local/etc/zabbix_agentd.conf
+
+- name: Copy file zabbix-5.0.5.tar.gz
+  copy:
+    src: files/zabbix-agent.service
+    dest: /etc/systemd/system/zabbix-agent.service
+
+- name: Restart daemon-reload
+  command: "systemctl daemon-reload"
+  become_user: root
+
+- name: Start zabbix-server service
+  command: "systemctl start zabbix-server"
+  become_user: root
+
+- name: Enable zabbix-server service
+  command: "systemctl enable zabbix-server"
+  become_user: root
+
+- name: Start zabbix-agent service
+  command: "systemctl start zabbix-agent"
+  become_user: root
+
+- name: Enable zabbix-agent service
+  command: "systemctl enable zabbix-agent"
+  become_user: root

@@ -1,0 +1,6 @@
+---
+# vars file for zabbix_server
+zabbix_db: "zabbix"
+zabbix_dbuser: "zabbix"
+zabbix_dbpasswpord: "zabbix"
+zabbix_datetimezone: "Europe/Paris"

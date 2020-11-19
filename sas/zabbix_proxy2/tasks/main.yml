@@ -1,0 +1,73 @@
+---
+# tasks file for zabbix_server
+- name: Uninstall a list of packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+    state: absent
+  vars:
+    packages:
+    - postgresql
+    - libapache2-mod-php7.3 
+    - php7.3 
+    - php7.3-bcmath 
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-fpm
+    - php7.3-gd 
+    - php7.3-json
+    - php7.3-ldap
+    - php7.3-mbstring
+    - php7.3-opcache
+    - php7.3-pgsql
+    - php7.3-readline
+    - php7.3-xml
+    - php7.3-curl
+    - php-ssh2
+    - libssh2-1
+    - libssh2-1-dev
+    - fping
+  when: (ansible_facts['distribution'] == "Debian")
+
+- name: Recursively remove directory zabbix-5.0.5
+  file:
+    path: "{{ source_path }}"
+    state: absent
+
+- name: Install a list of packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - apache2
+    - postgresql
+    - libapache2-mod-php7.3 
+    - php7.3 
+    - php7.3-bcmath 
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-fpm
+    - php7.3-gd 
+    - php7.3-json
+    - php7.3-ldap
+    - php7.3-mbstring
+    - php7.3-opcache
+    - php7.3-pgsql
+    - php7.3-readline
+    - php7.3-xml
+    - php7.3-curl
+    - php-ssh2
+    - libssh2-1
+    - libssh2-1-dev
+    - fping
+  when: (ansible_facts['distribution'] == "Debian")
+
+- name: Copy file zabbix-5.0.5.ta
+  copy:
+    src: "{{ src_tar_source_file }}"
+    dest: "{{ dest_tar_source_file }}"
+
+- unarchive:
+    src: "{{ src_tar_source_file }}"
+    dest: "{{ dest_untar_source_file }}"

@@ -1,0 +1,181 @@
+---
+# tasks file for zabbix_server
+- name: Uninstall a list of packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+    state: absent
+  vars:
+    packages:
+    - apache2
+    - postgresql
+    - libapache2-mod-php7.3 
+    - php7.3 
+    - php7.3-bcmath 
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-fpm
+    - php7.3-gd 
+    - php7.3-json
+    - php7.3-ldap
+    - php7.3-mbstring
+    - php7.3-opcache
+    - php7.3-pgsql
+    - php7.3-readline
+    - php7.3-xml
+    - php7.3-curl
+    - php-ssh2
+    - libssh2-1
+    - libssh2-1-dev
+    - fping
+
+- name: Recursively remove directory zabbix-5.0.5
+  file:
+    path: "{{ source_path }}"
+    state: absent
+
+- name: Recursively remove directory /var/www/html/zabbix
+  file:
+    path: "{{ web_path }}/zabbix"
+    state: absent
+
+- name: Install a list of packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - apache2
+    - postgresql
+    - libapache2-mod-php7.3 
+    - php7.3 
+    - php7.3-bcmath 
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-fpm
+    - php7.3-gd 
+    - php7.3-json
+    - php7.3-ldap
+    - php7.3-mbstring
+    - php7.3-opcache
+    - php7.3-pgsql
+    - php7.3-readline
+    - php7.3-xml
+    - php7.3-curl
+    - php-ssh2
+    - libssh2-1
+    - libssh2-1-dev
+    - fping
+
+- name: Copy file zabbix-5.0.5.tar.gz
+  copy:
+    src: files/zabbix-5.0.5.tar.gz
+    dest: "{{ dest_tar_source_file }}"
+
+- unarchive:
+    src: files/zabbix-5.0.5.tar.gz
+    dest: "{{ dest_untar_source_file }}"
+
+- name: Ensure group "zabbix" exists
+  group:
+    name: "{{ zabbix_group }}"
+    state: present
+
+- name: Add the user 'zabbix' with a specific uid and a primary group of 'zabbix'
+  user:
+    name: "{{ zabbix_user }}"
+    comment: "{{ zabbix_user }}"
+    group: "{{ zabbix_group }}"
+
+- name: run custom script database zabbix_11
+  command: "psql -c \"SELECT * FROM pg_stat_activity WHERE datname = 'zabbix';\""
+  become_user: postgres
+
+- name: run custom script database zabbix_111
+  command: "psql -c \"SELECT pg_terminate_backend (pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'zabbix';\""
+  become_user: postgres
+
+- name: run custom script drop database zabbix
+  command: "psql -c \"DROP DATABASE IF EXISTS zabbix;\""
+  become_user: postgres
+
+- name: run custom script drop user zabbix
+  command: "psql -c \"DROP USER IF EXISTS zabbix;\""
+  become_user: postgres
+
+- name: run custom script create user zabbix
+  command: "{{ cmd_create_psql_user }}"
+  become_user: postgres
+
+- name: run custom script create user zabbix
+  command: "createdb -O zabbix -E Unicode -T template0 zabbix"
+  become_user: postgres
+
+- name: run custom sql script name schema
+  command: "psql -d zabbix -f {{ source_path }}{{ cmd_sql_schema }}"
+  become_user: zabbix
+
+- name: Execute command ./configure with parameters
+  shell:
+     cmd: ./configure --enable-proxy --with-postgresql --with-net-snmp --with-ssh2
+     chdir: "{{ source_path }}"
+
+- name: Execute make install
+  shell:
+     cmd: make install
+     chdir: "{{ source_path }}"
+
+- name: copy ui directory
+  command: "rsync -avvuzr {{ source_path }}/ui {{ web_path }}"
+  become_user: root
+
+- name: rename directory ui to zabbix
+  command: "mv {{ web_path }}/ui {{ web_path }}/zabbix"
+  become_user: root
+
+- name: Copy file zabbix_proxy.conf
+  copy:
+    src: files/zabbix_proxy.conf
+    dest: "{{ zabbix_proxy_conf }}"
+
+- name: change perm zabbix directory
+  file:
+    path: "{{ web_path }}/zabbix"
+    mode: '0755'
+
+- name: change parameters values in php.ini
+  command: "{{ php_init_value_parameters }}"
+  become_user: root
+
+- name: change parameters values in php.ini
+  command: "{{ php_init_value_parameters_timezone }}"
+  become_user: root
+
+- name: change parameters values in php.ini
+  command: "{{ zabbix_server_parameter }}"
+  become_user: root
+
+- name: Start service zabbix-server on debian, if running
+  systemd:
+    name: apache2
+    state: restarted
+
+#- name: Enable service zabbix-server and ensure it is not masked
+#  systemd:
+#    name: zabbix-server
+#    enabled: yes
+
+#- name: Enable service zabbix-agentd and ensure it is not masked
+#  systemd:
+#    name: zabbix-agentd
+#    enabled: yes
+
+#- name: Start service zabbix-server on debian, if running
+#  systemd:
+#    name: zabbix-server
+#    state: restarted
+
+#- name: Start service zabbix-agentd on debian, if running
+#  systemd:
+#    name: zabbix-agentd
+#    state: restarted

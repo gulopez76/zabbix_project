@@ -1,0 +1,19 @@
+---
+# tasks file for zabbix_server
+- name: Recursively remove directory /var/www/html/zabbix
+  file:
+    path: /var/www/html/zabbix
+    state: absent
+
+- name: copy ui directory
+  command: "rsync -avvuzr /storage/izertis/quiron/install/zabbix-5.0.5/ui /var/www/html/zabbix"
+  become_user: root
+
+- name: rename directory ui to zabbix
+  command: "mv /var/www/html/ui /var/www/html"
+  become_user: root
+
+- name: change perm zabbix directory
+  file:
+    path: /var/www/html/zabbix
+    mode: '0755'
