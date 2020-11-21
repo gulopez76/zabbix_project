@@ -142,7 +142,7 @@
     mode: pull
     src: "{{ dest_untar_source_file }}{{ zabbix_version }}/ui"
     dest: "{{ web_path }}"
-  delegate_to: "{{ zabbix_server }}"
+  delegate_to: 192.168.1.168
   become_user: root
 
 - name: rename directory ui to zabbix
