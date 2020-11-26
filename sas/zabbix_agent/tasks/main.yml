@@ -1,0 +1,146 @@
+---
+# tasks file for zabbix_server
+- name: Recursively remove directory zabbix-5.0.5
+  file:
+    path: "{{ source_path }}"
+    state: absent
+
+- name: Recursively remove directory zabbix-5.0.5
+  file:
+    path: "{{ zabbix_path }}"
+    state: absent
+
+- name: Copy file gpg key zabbix
+  copy:
+    src: "files/zabbix.repo"
+    dest: "/etc/yum.repos.d/zabbix.repo"
+
+- name: Copy file gpg key zabbix
+  copy:
+    src: "files/RPM-GPG-KEY-ZABBIX"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX"
+
+- name: Install package Centos
+  yum:
+    update_cache: yes
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - gcc-c++.x86_64
+    - net-snmp-utils.x86_64
+    - net-snmp-devel.x86_64
+    - libssh-devel.x86_64
+    - libxml2-devel.x86_64
+    - libcurl-devel.x86_64
+    - libssh2.x86_64
+    - libssh2-devel.x86_64
+    - gnutls-devel.x86_64
+    - fping.x86_64
+
+- name: Ansible check directory.
+  stat:
+    path: "{{ dest_untar_source_file }}"
+  register: sas2_dir
+
+- name: Recursively remove directory /opt/sas2
+  file:
+    path: "{{ dest_untar_source_file }}"
+    state: absent
+  when: sas2_dir.stat.exists == true
+
+- name: Create a directory /opt/sas2 if it does not exist
+  file:
+    path: "{{ dest_untar_source_file }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy file zabbix-5.0.5.ta
+  copy:
+    src: "{{ src_tar_source_file }}"
+    dest: "{{ dest_tar_source_file }}"
+
+- unarchive:
+    src: "{{ src_tar_source_file }}"
+    dest: "{{ dest_untar_source_file }}"
+
+- name: Ensure group "zabbix" exists
+  group:
+    name: "{{ zabbix_group }}"
+    state: present
+
+- name: Add the user 'zabbix' with a specific uid and a primary group of 'zabbix'
+  user:
+    name: "{{ zabbix_user }}"
+    comment: "{{ zabbix_user }}"
+    group: "{{ zabbix_group }}"
+
+- name: Execute command ./configure with parameters
+  shell:
+     cmd: ./configure --enable-agent --enable-ipv4 --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2  --with-ssh2 --with-gnutls
+     chdir: "{{ source_path }}"
+
+- name: Execute make install
+  shell:
+     cmd: make install
+     chdir: "{{ source_path }}"
+
+- name: Create a directory log/zabbix if it does not exist
+  file:
+    path: /var/log/zabbix
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: '0755'
+ 
+- name: Create a directory run/zabbix if it does not exist
+  file:
+    path: /var/run/zabbix
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: '0755'
+
+- name: Create a directory /usr/local/etc/zabbix if it does not exist
+  file:
+    path: "{{ zabbix_path }}"
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: '0755'
+
+- name: copy certificados directory
+  synchronize:
+    src: files/certificados
+    dest: "{{ zabbix_path }}/"
+  become_user: zabbix
+
+- name: Create a directory /usr/local/etc/zabbix/externalscripts/ if it does not exist
+  file:
+    path: /usr/local/etc/zabbix/externalscripts
+    owner: zabbix
+    group: zabbix
+    state: directory
+    mode: '0755'
+
+- name: Copy zabbix_agentd.conf
+  copy:
+     src: files/zabbix_agentd.conf
+     dest: /usr/local/etc/zabbix_agentd.conf
+
+- name: Copy file zabbix-agent.service
+  copy:
+    src: files/zabbix-agent.service
+    dest: /etc/systemd/system/zabbix-agent.service
+
+- name: Restart daemon-reload
+  command: "systemctl daemon-reload"
+  become_user: root
+
+- name: Start zabbix-agent service
+  command: "systemctl start zabbix-agent"
+  become_user: root
+
+- name: Enable zabbix-agent service
+  command: "systemctl enable zabbix-agent"
+  become_user: root

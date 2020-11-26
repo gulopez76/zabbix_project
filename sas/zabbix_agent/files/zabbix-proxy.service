@@ -1,0 +1,13 @@
+[Unit]
+Description=Zabbix Proxy
+After=syslog.target network.target
+ 
+[Service]
+Type=oneshot
+User=zabbix
+ExecStart=/usr/local/sbin/zabbix_proxy
+RemainAfterExit=yes
+PIDFile=/var/run/zabbix/zabbix_proxy.pid
+ 
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,170 @@
+[sas-vcmnfnd-126-x64_redhat_linux_6-yum]
+name = vcmnfnd-126-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/vcmnfnd/126/vcmnfnd-126-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-econometr-125-x64_redhat_linux_6-yum]
+name = econometr-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/econometr/125/econometr-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-mlrning-125-x64_redhat_linux_6-yum]
+name = mlrning-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/mlrning/125/mlrning-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-dmdq-125-x64_redhat_linux_6-yum]
+name = dmdq-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/dmdq/125/dmdq-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-txtminspa-125-x64_redhat_linux_6-yum]
+name = txtminspa-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/txtminspa/125/txtminspa-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-oracle-125-x64_redhat_linux_6-yum]
+name = oracle-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/oracle/125/oracle-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-opt-125-x64_redhat_linux_6-yum]
+name = opt-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/opt/125/opt-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-va-125-x64_redhat_linux_6-yum]
+name = va-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/va/125/va-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-statviya-125-x64_redhat_linux_6-yum]
+name = statviya-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/statviya/125/statviya-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-dagent-135-x64_redhat_linux_6-yum]
+name = dagent-135-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/dagent/135/dagent-135-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-vtxtan-125-x64_redhat_linux_6-yum]
+name = vtxtan-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/vtxtan/125/vtxtan-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-dmdatap-125-x64_redhat_linux_6-yum]
+name = dmdatap-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/dmdatap/125/dmdatap-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-pcfile-125-x64_redhat_linux_6-yum]
+name = pcfile-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/pcfile/125/pcfile-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-espcasvcf-135-x64_redhat_linux_6-yum]
+name = espcasvcf-135-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/espcasvcf/135/espcasvcf-135-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-depentviya-136-x64_redhat_linux_6-yum]
+name = depentviya-136-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/depentviya/136/depentviya-136-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-odbc-125-x64_redhat_linux_6-yum]
+name = odbc-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/odbc/125/odbc-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+
+[sas-forecast-125-x64_redhat_linux_6-yum]
+name = forecast-125-x64_redhat_linux_6-yum
+baseurl=file:/mnt/sassanidadsa/viyashare/mirror2/repos/shipped/forecast/125/forecast-125-x64_redhat_linux_6-yum
+enabled=1
+sslverify=0
+sslcacert=
+sslclientcert=
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAS-9.x
+

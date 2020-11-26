@@ -1,7 +1,9 @@
 [localhost]
 127.0.0.1
 
-[srvbastion]
-51.144.128.192 ansible_user=izertisadmin ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-
+[sanidad]
+srv-bastion ansible_user=sasadmin ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+srv-casworker ansible_user=sasadmin ansible_ssh_common_args='-o StrictHostKeyChecking=no' 
+srv-cascontroller ansible_user=sasadmin ansible_ssh_common_args='-o StrictHostKeyChecking=no' 
+srv-ldap ansible_user=sasadmin ansible_ssh_common_args='-o StrictHostKeyChecking=no' 
 
